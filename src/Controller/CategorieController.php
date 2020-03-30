@@ -9,13 +9,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+
 class CategorieController extends AbstractController
 {
     /**
      * @Route("/categorie", name="categorie")
 	 * @Route("/categorie/demandermodification/{id<\d+>}", name="categorie_demandermodification")
      */
-    public function index($id = null,CategorieRepository $repository, Request $request)
+    public function index($id = null, CategorieRepository $repository, Request $request)
     {
 		// créer l'objet et le formulaire de création
         $categorie = new Categorie();
