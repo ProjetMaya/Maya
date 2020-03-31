@@ -7,6 +7,8 @@
 
         <h1>Les <span> {{ lesFournisseurs | length }}  </span>fournisseurs</h1>
 
+        {{ include('messages.html.twig') }}
+
         <div class="contenu">
             <table class="table table-striped table-advance table-hover">
                 <thead>
