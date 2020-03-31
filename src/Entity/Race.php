@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,6 +22,16 @@ class Race
      */
     private $intitule;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Animal", mappedBy="race")
+     */
+    private $animaux;
+
+    public function __construct()
+    {
+        $this->animaux = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -36,5 +47,15 @@ class Race
         $this->intitule = $intitule;
 
         return $this;
+    }
+
+    public function getAnimaux()
+    {
+        return $this->animaux;
+    }
+
+    public function setAnimaux($animaux): void
+    {
+        $this->animaux = $animaux;
     }
 }
