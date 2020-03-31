@@ -74,12 +74,12 @@ class EvenementController extends AbstractController
 				'success',
 				'L\'événement ' . $evenement->getTitre() . ' a été ajouté.'
 			);
-			// rediriger vers l'affichage des catégories qui comprend le formulaire pour l"ajout d'une nouvelle catégorie
+			// rediriger vers l'affichage des événements qui comprend le formulaire pour l'ajout d'un nouvel événement
 			return $this->redirectToRoute('evenement');
 
 		} else {
-	// affichage de la liste des catégories avec le formulaire de création et ses erreurs
-			// lire les catégories
+	// affichage de la liste des événements avec le formulaire de création et ses erreurs
+			// lire les événements
 			$lesEvenements = $repository->findAll();
 			// rendre la vue
 			return $this->render('evenement/index.html.twig', [
