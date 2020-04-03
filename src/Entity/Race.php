@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,5 +58,28 @@ class Race
     public function setAnimaux($animaux): void
     {
         $this->animaux = $animaux;
+    }
+
+    public function addAnimaux(Animal $animaux): self
+    {
+        if (!$this->animaux->contains($animaux)) {
+            $this->animaux[] = $animaux;
+            $animaux->setRace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimaux(Animal $animaux): self
+    {
+        if ($this->animaux->contains($animaux)) {
+            $this->animaux->removeElement($animaux);
+            // set the owning side to null (unless already changed)
+            if ($animaux->getRace() === $this) {
+                $animaux->setRace(null);
+            }
+        }
+
+        return $this;
     }
 }

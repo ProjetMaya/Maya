@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Produit;
+use App\Entity\ProduitRecherche;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Produit|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,24 +23,49 @@ class ProduitRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Produit::class);
     }
-
-    // /**
-    //  * @return Produit[] Returns an array of Produit objects
-    //  */
-    /*
-    public function findByExampleField($value)
+	
+	 /**
+     * @return Query
+     */
+    public function findAllByCriteria(ProduitRecherche $produitRecherche): Query
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        // le "p" est un alias utilisé dans la requête
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.libelle', 'ASC');
 
+        if ($produitRecherche->getLibelle()) {
+            $qb->andWhere('p.libelle LIKE :libelle')
+                ->setParameter('libelle', $produitRecherche->getLibelle().'%');
+        }
+
+        if ($produitRecherche->getPrixMini()) {
+            $qb->andWhere('p.prix >= :prixMini')
+                ->setParameter('prixMini', $produitRecherche->getPrixMini());
+        }
+
+        if ($produitRecherche->getPrixMaxi()) {
+            $qb->andWhere('p.prix < :prixMaxi')
+                ->setParameter('prixMaxi', $produitRecherche->getPrixMaxi());
+        }
+
+        //$query = $qb->getQuery();
+        //return $query->execute();
+		return $qb->getQuery();
+    }
+	
+	 /**
+     * @return Query
+     */
+    public function findAllOrderByLibelle(): Query
+    {
+        // le "p" est un alias utilisé dans la requête
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.libelle', 'ASC');
+
+        // retourne un query
+        return $qb->getQuery();
+    }
+	
     /**
      * @return Produit[]
      */
@@ -57,16 +85,4 @@ class ProduitRepository extends ServiceEntityRepository
         // retourne un tableau d'objets de type Produit
         return $query->getResult();
     }
-
-    /*
-    public function findOneBySomeField($value): ?Produit
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
