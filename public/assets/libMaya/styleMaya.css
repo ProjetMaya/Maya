@@ -72,3 +72,21 @@ h1 {
   line-height: 40px;
   padding: 10px;
  }
+
+/* Permet d'aligner les checkbox & les labels */
+.produits .custom-control-label {
+  padding-top: 4px;
+  display: inline;
+  user-select: none;
+}
+
+.produits {
+  height: calc(100vh - 450px); /* Temporaire */
+  overflow: auto;
+  padding: 0;
+}
+
+.produits .custom-checkbox {
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  padding-left: 35px !important;
+}

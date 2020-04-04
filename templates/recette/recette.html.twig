@@ -1,0 +1,30 @@
+<div class="container-fluid contenu">
+
+    {# -- formulaire recette -- #}
+    {{ form_start(form) }}
+
+    <div class="row">
+        <div class="col-md">{{ form_row(form.nom) }}</div>
+    </div>
+
+    <div>
+        {{ form_row(form.produits, {label_attr: {class: 'checkbox-custom'}, attr: {class: 'list-group-item produits'}}) }}
+    </div>
+
+    <div class="row">
+        <div>{{ form_rest(form) }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3"></div>
+        <button class="btn btn-primary btn-xs"><i class="fa fa-save"></i> {{ button|default('Enregistrer') }}</button>
+        <div class="col-md-1"></div>
+        <button class="btn btn-info btn-xs" type="reset" title="Effacer la saisie"><i class="fa fa-eraser"> Annuler</i></button>
+        <div class="col-md-1"></div>
+        <a href="{{ path('recette')}}" class="btn btn-secondary btn-xs"><i class="fa fa-undo"></i> Retour liste</a></span></th>
+    </div>
+
+    {{ form_end(form) }}
+
+</div>
+
