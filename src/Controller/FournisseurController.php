@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Fournisseur;
+use App\Entity\FournisseurRecherche;
+use App\Form\FournisseurRechercheType;
 use App\Form\FournisseurType;
 use App\Repository\FournisseurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FournisseurController extends AbstractController
@@ -19,13 +23,53 @@ class FournisseurController extends AbstractController
      * @param null $id
      * @param FournisseurRepository $repository
      * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index($id = null, FournisseurRepository $repository, Request $request)
+    public function index($id = null, FournisseurRepository $repository, SessionInterface $session, Request $request, PaginatorInterface $paginator)
     {
         // créer l'objet et le formulaire de création
         $fournisseur = new Fournisseur();
         $formCreation = $this->createForm(FournisseurType::class, $fournisseur);
+
+        // créer l'objet et le formulaire de recherche
+        $fournisseurRecherche = new FournisseurRecherche();
+        $formRecherche = $this->createForm(FournisseurRechercheType::class, $fournisseurRecherche);
+        $formRecherche->handleRequest($request);
+        if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
+            $fournisseurRecherche = $formRecherche->getData();
+            // cherche les fournisseurs correspondant aux critères, triés par libellé
+            // requête construite dynamiquement alors il est plus simple d'utiliser le querybuilder
+            //$lesFournisseurs =$repository->findAllByCriteria($fournisseurRecherche);
+            // mémoriser les critères de sélection dans une variable de session
+            $session->set('FournisseurCriteres', $fournisseurRecherche);
+            $lesFournisseurs = $paginator->paginate(
+                $repository->findAllByCriteria($fournisseurRecherche),
+                $request->query->getint('page', 1),
+                5
+            );
+        } else {
+            // lire les fournisseurs
+            if ($session->has("FournisseurCriteres")) {
+                $fournisseurRecherche = $session->get("FournisseurCriteres");
+                //$lesFournisseurs = $repository->findAllByCriteria($fournisseurRecherche);
+                $lesFournisseurs = $paginator->paginate(
+                    $repository->findAllByCriteria($fournisseurRecherche),
+                    $request->query->getint('page', 1),
+                    5
+                );
+                $formRecherche = $this->createForm(FournisseurRechercheType::class, $fournisseurRecherche);
+                $formRecherche->setData($fournisseurRecherche);
+            } else {
+                //$lesFournisseurs = $repository->findAllOrderByLibelle();
+                $p = new FournisseurRecherche();
+                $lesFournisseurs = $paginator->paginate(
+                    $repository->findAllByCriteria($p),
+                    $request->query->getint('page', 1),
+                    5
+                );
+            }
+        }
 
         // si 2e route alors $id est renseigné et on  crée le formulaire de modification
         if ($id != null) {
@@ -38,10 +82,8 @@ class FournisseurController extends AbstractController
             $formModificationView = null;
         }
 
-        // lire les fournisseurs
-        $lesFournisseurs = $repository->findAll();
-
         return $this->render('fournisseur/index.html.twig', [
+            'formRecherche' => $formRecherche->createView(),
             'formCreation' => $formCreation->createView(),
             'lesFournisseurs' => $lesFournisseurs,
             'formModification' => $formModificationView,

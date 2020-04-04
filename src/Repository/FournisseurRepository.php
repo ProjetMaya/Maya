@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Fournisseur;
+use App\Entity\FournisseurRecherche;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @method Fournisseur|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +21,31 @@ class FournisseurRepository extends ServiceEntityRepository
         parent::__construct($registry, Fournisseur::class);
     }
 
-    // /**
-    //  * @return Fournisseur[] Returns an array of Fournisseur objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param FournisseurRecherche $fournisseurRecherche
+     * @return Query
+     */
+    public function findAllByCriteria(FournisseurRecherche $fournisseurRecherche): Query
     {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        // le "p" est un alias utilisé dans la requête
+        $qb = $this->createQueryBuilder('f')
+            ->orderBy('f.nom', 'ASC');
 
-    /*
-    public function findOneBySomeField($value): ?Fournisseur
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if ($fournisseurRecherche->getNom()) {
+            $qb->andWhere('f.nom LIKE :nom')
+                ->setParameter('nom', $fournisseurRecherche->getNom() . '%');
+        }
+
+        if ($fournisseurRecherche->getDateMini()) {
+            $qb->andWhere('f.dateRelation >= :dateMini')
+                ->setParameter('dateMini', $fournisseurRecherche->getDateMini());
+        }
+
+        if ($fournisseurRecherche->getDateMaxi()) {
+            $qb->andWhere('f.dateRelation < :dateMaxi')
+                ->setParameter('dateMaxi', $fournisseurRecherche->getDateMaxi());
+        }
+
+        return $qb->getQuery();
     }
-    */
 }
