@@ -73,6 +73,18 @@ h1 {
   padding: 10px;
  }
 
+.col-actions {
+  width: 196px;
+}
+
+.col-actions-lg {
+  width: 216px;
+}
+
+.col-identifiants {
+  width: 100px;
+}
+
 /* Permet d'aligner les checkbox & les labels */
 .produits .custom-control-label {
   padding-top: 4px;
@@ -89,4 +101,19 @@ h1 {
 .produits .custom-checkbox {
   border-bottom: 1px solid rgba(0,0,0,.125);
   padding-left: 35px !important;
+}
+
+.categories-cards a {
+  color: white;
+  font-size: 50px !important;
+  font-weight: bold;
+  text-shadow: 0 0px 11px rgba(0, 0, 0, 0.85);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 43%;
+}
+
+.filtre {
+  margin-bottom: 10px;
 }

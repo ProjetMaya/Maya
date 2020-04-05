@@ -13,7 +13,7 @@
     <body>
 		<nav class="navbar navbar-expand-md bg-success navbar-dark fixed-top">
 			<!-- Brand -->
-			<a class="navbar-brand" href="#">La ferme de Maya</a>
+			<a class="navbar-brand" href="/">La ferme de Maya</a>
 			<!-- Toggler/collapsible Button -->
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 				<span class="navbar-toggler-icon"></span>
@@ -21,33 +21,45 @@
 			<!-- Navbar links -->
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
 				<ul class="navbar-nav ">
-					<li class="nav-item">
-						<a class="nav-link" href="/categorie/cards">Accueil</a>
+					<li class="nav-item {% if app.request.get('_route') == 'categorie_cards' %}active{% endif %}">
+						<a class="nav-link" href="/">Accueil</a>
 					</li>
-					<li class="nav-item ">
+					<li class="nav-item {% if app.request.get('_route') starts with 'produit'%}active{% endif %}">
 						<a class="nav-link" href="/produit">Produits</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item {% if app.request.get('_route')  starts with 'recette'%}active{% endif %}">
 						<a class="nav-link" href="/recette">Recettes</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item {% if app.request.get('_route') starts with 'animal'%}active{% endif %}">
+						<a class="nav-link" href="/animal">Animaux</a>
+					</li>
+					<li class="nav-item {% if app.request.get('_route') starts with 'race'%}active{% endif %}">
+						<a class="nav-link" href="/race">Races</a>
+					</li>
+					<li class="nav-item {% if app.request.get('_route') starts with 'client'%}active{% endif %}">
 						<a class="nav-link" href="/client">Clients</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Commandes</a>
+					<li class="nav-item {% if app.request.get('_route') starts with 'fournisseur'%}active{% endif %}">
+						<a class="nav-link" href="/fournisseur">Fournisseurs</a>
 					</li>
-					<!-- Dropdown -->
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Statistiques</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="#">Link 1</a>
-							<a class="dropdown-item" href="#">Link 2</a>
-							<a class="dropdown-item" href="#">Link 3</a>
-						</div>
+					<li class="nav-item {% if app.request.get('_route') starts with 'evenement'%}active{% endif %}">
+						<a class="nav-link" href="/evenement">Événement</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Se connecter</a>
-					</li>
+{#					<li class="nav-item">#}
+{#						<a class="nav-link" href="#">Commandes</a>#}
+{#					</li>#}
+{#					<!-- Dropdown -->#}
+{#					<li class="nav-item dropdown">#}
+{#						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Statistiques</a>#}
+{#						<div class="dropdown-menu">#}
+{#							<a class="dropdown-item" href="#">Link 1</a>#}
+{#							<a class="dropdown-item" href="#">Link 2</a>#}
+{#							<a class="dropdown-item" href="#">Link 3</a>#}
+{#						</div>#}
+{#					</li>#}
+{#					<li class="nav-item">#}
+{#						<a class="nav-link" href="#">Se connecter</a>#}
+{#					</li>#}
 				</ul>
 			</div>
 		</nav>

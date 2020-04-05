@@ -45,7 +45,7 @@ class CategorieController extends AbstractController
     }
 	
 	/**
-     * @Route("/categorie/cards", name="categorie_cards")
+     * @Route("/", name="categorie_cards")
      */
     public function cards(CategorieRepository $repository)
 	{
