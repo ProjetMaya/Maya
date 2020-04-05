@@ -9,14 +9,25 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\ClientRecherche;
+use App\Form\ClientRechercheType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class ClientController extends AbstractController
 {
     /**
      * @Route("/client", name="client")
 	 * @Route("/client/demandermodification/{id<\d+>}", name="client_demandermodification")
+	 *
+     * @param null $id
+     * @param ClientRepository $repository
+     * @param Request $request
+	 * @param SessionInterface $session
+     * @param PaginatorInterface $paginator
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index($id = null, ClientRepository $repository, Request $request)
+    public function index($id = null, ClientRepository $repository, Request $request, SessionInterface $session, PaginatorInterface $paginator)
     {
 		// créer l'objet et le formulaire de création
         $client = new Client();
@@ -33,11 +44,45 @@ class ClientController extends AbstractController
             $formModificationView = null;
         }
 		
-		//lire les clients
-		$lesClients = $repository->findAll();
+		// créer l'objet et le formulaire de recherche
+        $clientRecherche = new ClientRecherche();
+        $formRecherche = $this->createForm(ClientRechercheType::class, $clientRecherche);
+        $formRecherche->handleRequest($request);
+        if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
+            $clientRecherche = $formRecherche->getData();
+			// mémoriser les critères de sélection dans une variable de session
+            $session->set('ClientCriteres', $clientRecherche);
+			$lesClients= $paginator->paginate(
+                $repository->findAllByCriteria($clientRecherche),
+                $request->query->getint('page',1),
+                5
+            );
+        } else {
+			// lire les clients
+            if ($session->has("ClientCriteres")) {
+                $clientRecherche = $session->get("ClientCriteres");
+                //$lesClients = $repository->findAllByCriteria($clientRecherche);
+				$lesClients= $paginator->paginate(
+					$repository->findAllByCriteria($clientRecherche),
+					$request->query->getint('page',1),
+					5
+				);
+                $formRecherche = $this->createForm(ClientRechercheType::class, $clientRecherche);
+                $formRecherche->setData($clientRecherche);
+            } else {
+                //$lesClients = $repository->findAllOrderByLibelle();
+				$c=new ClientRecherche();
+                $lesClients= $paginator->paginate(
+                    $repository->findAllByCriteria($c),
+                    $request->query->getint('page',1),
+                    5
+                );
+			}
+        }
 		
         return $this->render('client/index.html.twig', [
             'lesClients' => $lesClients,
+			'formRecherche' => $formRecherche->createView(),
 			'formCreation' => $formCreation->createView(),
 			'formModification' => $formModificationView,
             'idClientModif' => $id,

@@ -22,6 +22,7 @@ class FournisseurController extends AbstractController
      *
      * @param null $id
      * @param FournisseurRepository $repository
+	 * @param SessionInterface $session
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @return \Symfony\Component\HttpFoundation\Response
@@ -62,9 +63,9 @@ class FournisseurController extends AbstractController
                 $formRecherche->setData($fournisseurRecherche);
             } else {
                 //$lesFournisseurs = $repository->findAllOrderByLibelle();
-                $p = new FournisseurRecherche();
+                $f = new FournisseurRecherche();
                 $lesFournisseurs = $paginator->paginate(
-                    $repository->findAllByCriteria($p),
+                    $repository->findAllByCriteria($f),
                     $request->query->getint('page', 1),
                     5
                 );

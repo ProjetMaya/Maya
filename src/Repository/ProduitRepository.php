@@ -66,6 +66,20 @@ class ProduitRepository extends ServiceEntityRepository
         return $qb->getQuery();
     }
 	
+	/**
+     * @return Query
+     */
+    public function findAllByCategorie(string $categorie): Query
+    {
+		// le "p" est un alias utilisé dans la requête
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.libelle', 'ASC')
+			->andWhere('p.categorie = :categorie')
+			->setParameter('categorie', $categorie);
+		
+		return $qb->getQuery();
+	}
+	
     /**
      * @return Produit[]
      */

@@ -27,7 +27,7 @@ class FournisseurRepository extends ServiceEntityRepository
      */
     public function findAllByCriteria(FournisseurRecherche $fournisseurRecherche): Query
     {
-        // le "p" est un alias utilisé dans la requête
+        // le "f" est un alias utilisé dans la requête
         $qb = $this->createQueryBuilder('f')
             ->orderBy('f.nom', 'ASC');
 

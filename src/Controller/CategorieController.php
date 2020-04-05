@@ -45,6 +45,15 @@ class CategorieController extends AbstractController
     }
 	
 	/**
+     * @Route("/categorie/cards", name="categorie_cards")
+     */
+    public function cards(CategorieRepository $repository)
+	{
+		$lesCategories = $repository->findAll();
+		return $this->render('categorie/cards.html.twig', ['lesCategories' => $lesCategories,]);
+	}
+	
+	/**
 	 * @Route("/categorie/ajouter", name="categorie_ajouter")
 	 */
 	public function ajouter(Categorie $categorie = null, Request $request, EntityManagerInterface $entityManager, CategorieRepository $repository)

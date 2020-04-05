@@ -18,50 +18,62 @@ class ProduitController extends AbstractController
 {
     /**
      * @Route("/produit", name="produit")
+	 * @Route("/produit/categoriecards/{categorie<\d+>}", name="produit_categoriecards")
      */
-    public function index(Request $request, ProduitRepository $repository, SessionInterface $session, PaginatorInterface $paginator)
-    {
-		// créer l'objet et le formulaire de recherche
-        $produitRecherche = new ProduitRecherche();
-        $formRecherche = $this->createForm(ProduitRechercheType::class, $produitRecherche);
-        $formRecherche->handleRequest($request);
-        if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
-            $produitRecherche = $formRecherche->getData();
-            // cherche les produits correspondant aux critères, triés par libellé
-            // requête construite dynamiquement alors il est plus simple d'utiliser le querybuilder
-            //$lesProduits =$repository->findAllByCriteria($produitRecherche);
-			// mémoriser les critères de sélection dans une variable de session
-            $session->set('ProduitCriteres', $produitRecherche);
+    public function index($categorie = null, Request $request, ProduitRepository $repository, SessionInterface $session, PaginatorInterface $paginator)
+    {	
+		// si 2e route alors $categorie est renseigné et on afficher que les produits de cette categorie
+		if ($categorie != null) {
 			$lesProduits= $paginator->paginate(
-                $repository->findAllByCriteria($produitRecherche),
+                $repository->findAllByCategorie($categorie),
                 $request->query->getint('page',1),
                 5
             );
-        } else {
-			// lire les produits
-            if ($session->has("ProduitCriteres")) {
-                $produitRecherche = $session->get("ProduitCriteres");
-                //$lesProduits = $repository->findAllByCriteria($produitRecherche);
+			$formRechercheView = null;
+		} else
+		{
+			// créer l'objet et le formulaire de recherche
+			$produitRecherche = new ProduitRecherche();
+			$formRecherche = $this->createForm(ProduitRechercheType::class, $produitRecherche);
+			$formRecherche->handleRequest($request);
+			if ($formRecherche->isSubmitted() && $formRecherche->isValid()) {
+				$produitRecherche = $formRecherche->getData();
+				// cherche les produits correspondant aux critères, triés par libellé
+				// requête construite dynamiquement alors il est plus simple d'utiliser le querybuilder
+				//$lesProduits =$repository->findAllByCriteria($produitRecherche);
+				// mémoriser les critères de sélection dans une variable de session
+				$session->set('ProduitCriteres', $produitRecherche);
 				$lesProduits= $paginator->paginate(
 					$repository->findAllByCriteria($produitRecherche),
 					$request->query->getint('page',1),
 					5
 				);
-                $formRecherche = $this->createForm(ProduitRechercheType::class, $produitRecherche);
-                $formRecherche->setData($produitRecherche);
-            } else {
-                //$lesProduits = $repository->findAllOrderByLibelle();
-				$p=new ProduitRecherche();
-                $lesProduits= $paginator->paginate(
-                    $repository->findAllByCriteria($p),
-                    $request->query->getint('page',1),
-                    5
-                );
+			} else {
+				// lire les produits
+				if ($session->has("ProduitCriteres")) {
+					$produitRecherche = $session->get("ProduitCriteres");
+					//$lesProduits = $repository->findAllByCriteria($produitRecherche);
+					$lesProduits= $paginator->paginate(
+						$repository->findAllByCriteria($produitRecherche),
+						$request->query->getint('page',1),
+						5
+					);
+					$formRecherche = $this->createForm(ProduitRechercheType::class, $produitRecherche);
+					$formRecherche->setData($produitRecherche);
+				} else {
+					//$lesProduits = $repository->findAllOrderByLibelle();
+					$p=new ProduitRecherche();
+					$lesProduits= $paginator->paginate(
+						$repository->findAllByCriteria($p),
+						$request->query->getint('page',1),
+						5
+					);
+				}
 			}
-        }
-
+			$formRechercheView = $formRecherche->createView() ;
+		}
         return $this->render('produit/index.html.twig', [
-			'formRecherche' => $formRecherche->createView(),
+			'formRecherche' => $formRechercheView,
             'lesProduits' => $lesProduits,
         ]);
     }
