@@ -5,7 +5,9 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
 			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<script rel="stylesheet" src="{{ asset('assets/lib/jquery/jquery.min.js') }}"></script>
             <link rel="stylesheet" href="{{ asset('assets/lib/bootstrap-4.4.1-dist/css/bootstrap.min.css') }}" />
+			<script rel="stylesheet" src="{{ asset('assets/lib/bootstrap-4.4.1-dist/js/bootstrap.js') }}"></script>
             <link rel="stylesheet" href="{{ asset('assets/libMaya/styleMaya.css') }}" />
             <link href="{{ asset('assets/lib/font-awesome/css/font-awesome.css') }}" rel="stylesheet" />
 		{% endblock %}
@@ -45,21 +47,22 @@
 					<li class="nav-item {% if app.request.get('_route') starts with 'evenement'%}active{% endif %}">
 						<a class="nav-link" href="/evenement">Événement</a>
 					</li>
-{#					<li class="nav-item">#}
-{#						<a class="nav-link" href="#">Commandes</a>#}
-{#					</li>#}
-{#					<!-- Dropdown -->#}
-{#					<li class="nav-item dropdown">#}
-{#						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Statistiques</a>#}
-{#						<div class="dropdown-menu">#}
-{#							<a class="dropdown-item" href="#">Link 1</a>#}
-{#							<a class="dropdown-item" href="#">Link 2</a>#}
-{#							<a class="dropdown-item" href="#">Link 3</a>#}
-{#						</div>#}
-{#					</li>#}
-{#					<li class="nav-item">#}
-{#						<a class="nav-link" href="#">Se connecter</a>#}
-{#					</li>#}
+					{#<li class="nav-item">
+						<a class="nav-link" href="#">Commandes</a>
+					</li>#}
+					<!-- Dropdown -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" role="button" data-toggle="dropdown">Statistiques</a>
+						<div class="dropdown-menu" aria-labelledby="navbardrop">
+							<a class="dropdown-item" href="/statistiques/categoriePrixMaxEtMin">Prix minimum et maximum des catégories</a> <!-- TP01a -->
+							<a class="dropdown-item" href="/statistiques/categorieMoyennePrix">Moyenne des prix des catégories</a> <!-- TP01b -->
+							<a class="dropdown-item" href="/statistiques/produitSiRecette">Nombre de recettes des produits</a> <!-- TP01c -->
+							<a class="dropdown-item" href="/statistiques/recetteSiDeuxProduits">Nombre de produits des recettes</a> <!-- TP01d -->
+						</div>
+					</li>
+					{#<li class="nav-item">
+						<a class="nav-link" href="#">Se connecter</a>
+					</li>#}
 				</ul>
 			</div>
 		</nav>

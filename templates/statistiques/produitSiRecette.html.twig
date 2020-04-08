@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques produit{% endblock %}
+
+{% block body %}
+	<div class="col-md-6 contenu-blanc">
+        <h1>Les <span> {{  lesProduits | length }}  </span>produits</h1>
+		<!-- le filtre "length" affiche la longueur d'un tableau, d'une chaîne de caractères -->
+		
+        <div class="contenu">
+            <table class="table table-striped table-advance table-hover">
+                <thead>
+					<tr class="bg-entete">
+						<th>Libellé</th>
+						<th>Prix</th>
+						<th>Bio</th>
+						<th>Nombre de recettes</th>
+					</tr>
+                </thead>
+                <tbody>
+					{% for key, produit in lesProduits %}
+						<tr>
+							<td>{{ produit.libelle }}</td>
+							<td>{{ produit.prix | number_format(2, ',', ' ') }} €</td>
+							<td>{% if produit.bio %}Oui{% else %}Non{% endif %}</td>
+							<td>{{ produit.nbRecettes }}</td>
+						</tr>
+					{% endfor %}
+                </tbody>
+            </table>
+        </div> <!--fin div contenu-->
+    </div> <!--fin div col-md-6-->
+{% endblock %}
