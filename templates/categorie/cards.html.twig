@@ -3,6 +3,26 @@
 {% block title %}Catégories{% endblock %}
 
 {% block body %}
+	{# Début Météo #}
+	<div class="contenu-blanc meteo">
+		<div class="row">
+			<div class="col">
+				<span class="ville">{{ meteo['ville'] }}</span>
+				<small>{{ meteo['description'] }} - {{ meteo['dateJour'] }}</small>
+			</div>
+			<div class="informations">
+				<span class="temperature">
+					<img src="{{ meteo['tempsIcone'] }}">
+					<span class="max">{{ meteo['temp_max'] }}&deg;C</span>
+					/
+					<span>{{ meteo['temp_min'] }}&deg;C</span>
+				</span>
+				<small>Humidité : {{ meteo['humidity'] }} % - Vent : {{ meteo['wind'] }} km/h</small>
+			</div>
+		</div>
+	</div>
+	{# Fin Météo #}
+
 	<div class="contenu-blanc">
         <h1>Les <span> {{  lesCategories | length }}  </span>catégories de produits</h1>
 		<!-- le filtre "length" affiche la longueur d'un tableau, d'une chaîne de caractères -->

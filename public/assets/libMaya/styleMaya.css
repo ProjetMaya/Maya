@@ -117,3 +117,23 @@ h1 {
 .filtre {
   margin-bottom: 10px;
 }
+
+.meteo {
+  margin-bottom: 10px;
+}
+.meteo .ville {
+  font-size: 50px;
+  font-weight: 500;
+  display: block;
+}
+.meteo .informations {
+  text-align: right;
+  padding-right: 15px;
+}
+.meteo .temperature {
+  font-size: 50px;
+  display: block;
+}
+.meteo .temperature .max {
+  font-weight: 500;
+}
