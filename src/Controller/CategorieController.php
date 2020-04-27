@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\CategorieType;
 use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
+use App\Services\MeteoService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -50,7 +51,10 @@ class CategorieController extends AbstractController
     public function cards(CategorieRepository $repository)
 	{
 		$lesCategories = $repository->findAll();
-		return $this->render('categorie/cards.html.twig', ['lesCategories' => $lesCategories,]);
+		return $this->render('categorie/cards.html.twig', [
+		    'lesCategories' => $lesCategories,
+            'meteo' => MeteoService::getMeteo()
+        ]);
 	}
 	
 	/**
