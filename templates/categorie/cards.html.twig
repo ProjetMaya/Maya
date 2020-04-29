@@ -4,14 +4,15 @@
 
 {% block body %}
 	{# Début Météo #}
-	<div class="contenu-blanc meteo">
+	<div class="contenu-vert meteo">
 		<div class="row">
 			<div class="col">
-				<span class="ville">{{ meteo['ville'] }}</span>
-				<small>{{ meteo['description'] }} - {{ meteo['dateJour'] }}</small>
+				<span class="ville">Le temps à {{ meteo['ville'] }}</span>
+				<small>Le {{ meteo['dateJour'] }}</small>
 			</div>
 			<div class="informations">
 				<span class="temperature">
+					<small>{{ meteo['description'] }}</small>
 					<img src="{{ meteo['tempsIcone'] }}">
 					<span class="max">{{ meteo['temp_max'] }}&deg;C</span>
 					/
@@ -22,7 +23,7 @@
 		</div>
 	</div>
 	{# Fin Météo #}
-
+	
 	<div class="contenu-blanc">
         <h1>Les <span> {{  lesCategories | length }}  </span>catégories de produits</h1>
 		<!-- le filtre "length" affiche la longueur d'un tableau, d'une chaîne de caractères -->
