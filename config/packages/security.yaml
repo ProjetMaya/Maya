@@ -1,13 +1,28 @@
 security:
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: lazy
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                target: app_login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -17,6 +32,20 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+    # = Note: Seulement le premier access control qui correspond est appliqué
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        #  Un utilisateur anonyme a uniquement accès à la page de connexion (route /login)
+        # correspond à /login/*
+        - { path: '^/login', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+
+        #  Un administrateur a accès à la gestion des catégories
+        # correspond à /categorie/* sauf si la règle précédente s'applique
+        - { path: '^/categorie', roles: [ROLE_ADMIN] }
+        
+        #  Un administrateur a accès à la gestion des utilisateurs
+        # correspond à /user/* sauf si la règle précédente s'applique
+        - { path: '^/user', roles: [ROLE_ADMIN] }
+
+        #  Un utilisateur a accès à tout sauf la gestion des catégories et des utilisateurs
+        # correspond à /* sauf si la règle précédente s'applique
+        - { path: '^/*', roles: [ROLE_ADMIN, ROLE_USER] }

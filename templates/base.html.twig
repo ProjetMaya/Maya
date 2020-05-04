@@ -26,6 +26,16 @@
 					<li class="nav-item {% if app.request.get('_route') == 'categorie_cards' %}active{% endif %}">
 						<a class="nav-link" href="/">Accueil</a>
 					</li>
+					{% if app.user %}
+						{% if is_granted('ROLE_ADMIN') %}
+							<li>
+								<a class="nav-link" href="{{ path('user_index')}}">Utilisateurs</a>
+							</li>
+							<li>
+								<a class="nav-link" href="{{ path('categorie')}}">Catégories</a>
+							</li>
+						{% endif %}
+					{% endif %}
 					<li class="nav-item {% if app.request.get('_route') starts with 'produit'%}active{% endif %}">
 						<a class="nav-link" href="/produit">Produits</a>
 					</li>
@@ -60,11 +70,19 @@
 							<a class="dropdown-item" href="/statistiques/recetteSiDeuxProduits">Nombre de produits des recettes</a> <!-- TP01d -->
 						</div>
 					</li>
-					{#<li class="nav-item">
-						<a class="nav-link" href="#">Se connecter</a>
-					</li>#}
+					<li class="nav-item">
+						{#    si un utilisateur existe (et est donc connecté)    #}
+						{% if app.user %}
+							<li><a class="nav-link" href="{{ path('app_logout')}}">Se déconnecter</a></li>
+						{% else %}
+							<li><a class="nav-link" href="{{ path('app_login')}}">Se connecter</a></li>
+						{% endif %}
+					</li>
 				</ul>
 			</div>
+			{% if app.user %}
+				<span class="navbar-brand pull-right">{{ app.user.prenom}} {{ app.user.nom }}</span>
+			{% endif %}
 		</nav>
 		<div class="container-fluid">
 			{% block body %}{% endblock %}
