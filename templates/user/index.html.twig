@@ -15,11 +15,11 @@
 						<th class="col-identifiants">Identifiants</th>
 						<th>Email</th>
 						<th>Rôles</th>
-						<th class="col-md-2">Mot de passe</th>
+						<th>Mot de passe</th>
 						<th>Nom</th>
 						<th>Prénom</th>
 						<th>Téléphone</th>
-						<th class="col-actions">Actions</th>
+						<th class="col-actions" style="width: 210px;">Actions<span class="pull-right" ><a href="{{ path('user_new') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter</a></span></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -28,13 +28,13 @@
 							<td>{{ user.id }}</td>
 							<td>{{ user.email }}</td>
 							<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-							<td>{{ user.password }}</td>
+							<td class="col-password">{{ user.password }}</td>
 							<td>{{ user.nom }}</td>
 							<td>{{ user.prenom }}</td>
 							<td>{{ user.telephone }}</td>
 							<td>
-								<a href="{{ path('user_show', {'id': user.id}) }}">Détailler</a>
-								<a href="{{ path('user_edit', {'id': user.id}) }}">Modifier</a>
+								<a class="btn btn-info btn-sm"  href="{{ path('user_show', {'id': user.id}) }}"  title="Visualiser"><i class="fa fa-eye"></i> Visualiser</a>
+								<a class="btn btn-primary btn-sm" href="{{ path('user_edit', {'id': user.id}) }}" title="Modifier"><i class="fa fa-pencil"></i> Modifier</a>
 							</td>
 						</tr>
 					{% else %}
@@ -44,8 +44,6 @@
 					{% endfor %}
 				</tbody>
 			</table>
-
-			<a href="{{ path('user_new') }}">Ajouter un nouvel utilisateur</a>
 		</div>	
 	</div>		
 {% endblock %}

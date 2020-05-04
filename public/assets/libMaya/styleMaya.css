@@ -145,3 +145,25 @@ h1 {
 .meteo .temperature .max {
   font-weight: 500;
 }
+
+.col-password {
+  max-width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.roles .custom-control-label {
+  padding-top: 4px;
+  display: inline;
+  user-select: none;
+}
+.roles {
+  overflow: auto;
+  padding: 0;
+}
+.roles .custom-checkbox {
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  padding-left: 35px !important;
+}
