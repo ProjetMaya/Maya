@@ -19,6 +19,26 @@ class RecetteRepository extends ServiceEntityRepository
         parent::__construct($registry, Recette::class);
     }
 
+	/**
+     * @return string[]
+     */
+    public function findNameByProduit($idProduit): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        // ce n'est pas du SQL mais du DQL : Doctrine Query Language
+        // il s'agit en fait d'une requête classique mais qui référence l'objet au lieu de la table
+        $query = $entityManager->createQuery(
+            'SELECT r.nom
+            FROM App\Entity\Recette r
+            JOIN r.produits p
+            WHERE p.id = :idProduit
+            ORDER BY r.nom ASC'
+        )->setParameter('idProduit', $idProduit);
+
+        return $query->getResult();
+    }
+
     // /**
     //  * @return Recette[] Returns an array of Recette objects
     //  */

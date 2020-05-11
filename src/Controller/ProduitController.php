@@ -13,6 +13,9 @@ use App\Entity\ProduitRecherche;
 use App\Form\ProduitRechercheType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Recette;                                                         
+use App\Repository\RecetteRepository;                                           
 
 class ProduitController extends AbstractController
 {
@@ -146,4 +149,20 @@ class ProduitController extends AbstractController
             return $this->redirectToRoute('produit');
         }
     }
+	
+	/**
+	 * @Route("/produit/ajaxrecettesproduit", name="ajax_recettes_produit")
+	 */
+	public function ajaxRecettesProduit(Request $request, RecetteRepository $repository)
+	{
+		// récupérer la valeur de idProduit envoyée
+		$idProduit = $request->request->get('idProduit');
+		// chercher les recettes correspondantes
+		$lesRecettes= $repository->findNameByProduit($idProduit);
+		// retourner une réponse encodée en JSON
+		$response = new Response(json_encode($lesRecettes));
+		$response->headers->set('Content-Type', 'application/json');
+
+		return $response;
+	}
 }

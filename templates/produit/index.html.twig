@@ -48,6 +48,7 @@
 						<th>Disponibilité</th>
 						<th>Description</th>
 						<th>Prix</th>
+						<th>Recettes</th>
 						<th class="col-actions">Actions<span class="pull-right" ><a href="{{ path('produit_ajouter') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter</a></span></th>
 					</tr>
                 </thead>
@@ -64,6 +65,7 @@
 							<td>{{ produit.description }}</td>
 							<td>{{ produit.getPrix() | number_format(2, ',', ' ') }} €</td>
 							{# filtre permettant d'afficher la virgule à la place du point pour les nombres réels #}
+							<td><a data-toggle="modal" href="#" onclick="afficherMesRecettes({{produit.id}});">{{ produit.getRecettes() | length }}</a></td>
 							<td class="row">
 								<!-- formulaire pour demander la modification ou la suppression -->
 								<form>
@@ -82,4 +84,51 @@
             </div>
         </div>
     </div>
+	<!-- Modal -->
+    <div class="modal fade" id="mesRecettesModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <!-- Modal content-->
+            <div class="modal-content contenu">
+                <div class="modal-body">
+					<p>Les recettes utilisant ce produit :</p>
+                    <ul id="mesRecettesContenu">
+					</ul>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('assets/jquery/jquery-3.5.0.min.js') }}"></script>
+    <script src="{{ asset('assets/lib/bootstrap-4.4.1-dist/js/bootstrap.min.js') }}"></script>
+	<script>
+        function afficherMesRecettes(idProduit) {
+            $(document).ready(function() {
+				$.ajax({
+					url: '{{ path('ajax_recettes_produit') }}',
+					type: "POST",
+					dataType: "json",
+					data: {
+						"idProduit": idProduit
+					},
+					async: true,
+					success: function (lesRecettes) {
+						var chaineHtml = "";
+						for (var i = 0; i < lesRecettes.length; i++) {
+							chaineHtml = chaineHtml + "<li>" + lesRecettes[i].nom + "</li>";
+						}
+						$('#mesRecettesContenu').html(chaineHtml);
+						$('#mesRecettesModal').modal('show');
+					},
+					error: function(jqXHR){         // Fonction à appeler si la requête échoue
+						$("#mesRecettesContenu").html('<div class="text-danger">Erreur n°128</div>');
+					}
+				})
+			});
+        }
+    </script>
 {% endblock %}
